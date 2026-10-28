@@ -28,11 +28,32 @@ This plugin performs the one missing step: it expands the ancestors of the open 
 
 - Watches the selected side-panel tab and expands every collapsed folder above the open file.
 - Leaves already-expanded folders alone, since expanding one refetches its children.
-- Adds a **Reveal active file in tree** command, default keybind `mod+alt+shift+r`, which still works
-  after you switch to the Review tab by falling back to the last file tab seen.
+- Adds a **Reveal active file in tree** command, described below.
 
 Both the Files and the Review panel read folder expansion from the same per-screen file model, so
 expanding here serves both.
+
+Only file tabs drive the automatic behavior. Selecting the Review tab, the **Open file** launcher, or
+any other side tab does nothing on its own, which is why the command exists.
+
+## The command
+
+The automatic behavior covers the common case. The command exists for when it does not.
+
+**Reveal active file in tree** reveals the file you are looking at right now. It is useful when:
+
+- You collapsed a folder on purpose and the tree has since been reset, so nothing is selected.
+- The tree scrolled somewhere else and you want to get back to the open file.
+- You are on the Review tab and want the file tree to show the file you are reviewing.
+
+Find it in the command palette under **View**, or press `mod+alt+shift+r`. `mod` is Cmd on macOS and
+Ctrl elsewhere, so it is Cmd+Option+Shift+R on macOS.
+
+The command falls back to the most recent file tab you had open, so it still works after you switch
+to the Review tab. Before any file tab has been selected in this window, it does nothing.
+
+To rebind it, open **Settings > Shortcuts**, find it under the **Navigation** section, and record a new
+key. The binding is stored by the app, not by this plugin, so it survives plugin updates.
 
 ## Install
 
