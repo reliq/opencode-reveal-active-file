@@ -3,6 +3,19 @@
 An OpenCode Desktop GUI plugin that expands collapsed folders so the file open in the side panel is
 visible in the panel's tree.
 
+## Disclaimer
+
+This is an unofficial plugin. It is not affiliated with, endorsed by, or supported by the OpenCode
+project.
+
+It works by reading the side panel's tab strip from the DOM, because the app does not expose the
+active side tab to plugins. That means it depends on two undocumented details, and a future OpenCode
+release can break it without warning. When that happens the plugin stops revealing files; it does not
+damage anything. The toast described under [Troubleshooting](#troubleshooting) tells you when it has
+stopped working.
+
+Tested against OpenCode Desktop 2.2.0 on macOS. Other versions and platforms are untested.
+
 ## The problem
 
 The side panel already selects and scrolls its tree to the active file, but only when that file's row
@@ -23,10 +36,13 @@ expanding here serves both.
 
 ## Install
 
+From a clone:
+
 ```bash
-npm install
-npm run build
+git clone https://github.com/reliq/opencode-reveal-active-file
 ```
+
+Then point your global config at the directory:
 
 ```jsonc
 // ~/.config/opencode/opencode.json
@@ -36,35 +52,36 @@ npm run build
 }
 ```
 
-OpenCode Desktop reads plugins from `opencode.json`, not `cli.json`. For development, run
-`npm run watch` and use **Settings > Extensions > Plugins > Reload** after a rebuild.
+The prebuilt bundle is committed, so no build step is needed. OpenCode Desktop reads plugins from
+`opencode.json`, not `cli.json`. After adding the plugin, use **Settings > Extensions > Plugins >
+Reload**, or restart the app.
 
-## How it reads the active file, and why that is fragile
+To build it yourself instead, run `npm install && npm run build`.
 
-The app does not expose the active side-panel tab to plugins:
+## Troubleshooting
 
-- `layout.stored(session)` is filtered to the calling plugin's own tab keys.
-- `screen.file` has no `active()`; it exposes `tree`, `selection`, `scroll`, `get`, and `sync`.
-- `Changes.active()` is the Review panel's own selection, and only covers changed files.
+If a tab strip exists but the plugin cannot read the selected tab, it shows a one-time toast
+reporting what it found:
 
-So this plugin reads the tab strip from the DOM. Kobalte's tab trigger renders `aria-selected` on the
-selected tab, and the host puts the tab key on `data-pane-tab`, in the form `file://<encoded path>`.
-The key is passed to the public `screen.file.resolve()`, which strips the protocol, decodes, and makes
-the path workspace-relative.
+> Reveal active file cannot read the open file
+> Side panel tab strip: 3 tabs, 1 selected, keys: file:///..., review:changes
 
-If the app renames either attribute, the plugin stops revealing. When a tab strip exists but no
-selection is ever reported, it shows a one-time toast instead of failing silently. This is why the
-plugin is a stopgap: the proper fix belongs upstream.
+That means the app changed the attributes this plugin reads, and it needs an update. Please open an
+issue with the toast text.
 
 ## Known limits
 
-- Depends on two undocumented DOM attributes, as above.
+- Depends on two undocumented DOM attributes, as described in the disclaimer.
+- The tree's own scroll can miss when the plugin has just expanded folders. The app scrolls in a
+  microtask, before the newly expanded rows are measured, so the scroll clamps to the old height.
+  Selection and expansion are still correct; press the keybind to scroll again.
 - Narrow windows use a different file view, which this plugin does not drive.
-- The GUI plugin API is experimental. `@opencode/plugin` is pinned to the tested app version.
+- The GUI plugin API is experimental.
 
 ## Development
 
 ```bash
+npm install
 npm run typecheck
 npm test
 npm run build
@@ -72,7 +89,7 @@ npm run build
 
 The bundle must stay a single CommonJS file that default-exports `Plugin.define`. Only `effect`,
 `solid-js`, `@opencode/*`, Electron, and Node built-ins may remain external; the `gui()` Vite preset
-enforces this.
+enforces this. `dist/` is committed so that a git-based install ships a working bundle.
 
 ## License
 

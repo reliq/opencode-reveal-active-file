@@ -1,4 +1,6 @@
 node_modules/
-dist/
 *.log
 .DS_Store
+
+# `dist/` is committed on purpose. OpenCode loads the prebuilt `./gui-experimental` bundle, and a
+# git-based install must ship it without requiring a build step.

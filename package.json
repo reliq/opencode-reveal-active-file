@@ -1,10 +1,15 @@
 {
   "name": "opencode-reveal-active-file",
   "version": "0.1.0",
-  "private": true,
-  "description": "OpenCode Desktop GUI plugin that expands collapsed folders so the active file is visible in the side panel tree",
+  "private": false,
+  "description": "OpenCode Desktop GUI plugin that expands collapsed folders so the open file is visible in the side panel tree",
   "license": "MIT",
   "type": "module",
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "opencode-desktop"
+  ],
   "exports": {
     "./gui-experimental": "./dist/gui-experimental.cjs"
   },
