@@ -36,7 +36,7 @@ expanding here serves both.
 
 ## Install
 
-From a clone:
+Clone the repository:
 
 ```bash
 git clone https://github.com/reliq/opencode-reveal-active-file
@@ -57,6 +57,15 @@ The prebuilt bundle is committed, so no build step is needed. OpenCode Desktop r
 Reload**, or restart the app.
 
 To build it yourself instead, run `npm install && npm run build`.
+
+### Why not `opencode plugin add`
+
+`opencode plugin add github:reliq/opencode-reveal-active-file` fails on OpenCode 2.2.0 with
+`git dep preparation failed`. That is a bug in the installer, not in this plugin: the same command
+installs npm packages fine, and `npm install github:reliq/opencode-reveal-active-file` works. Until it
+is fixed upstream, use the clone-and-configure steps above.
+
+This plugin is not published to npm.
 
 ## Troubleshooting
 
