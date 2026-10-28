@@ -21,8 +21,7 @@
     "build": "vite build",
     "watch": "vite build --watch",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "prepare": "vite build"
+    "test": "vitest run"
   },
   "devDependencies": {
     "@opencode/plugin": "2.2.0",
